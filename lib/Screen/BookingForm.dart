@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hotel_grand_capitol/Constants.dart';
+import 'package:hotel_grand_capitol/Controllers/BookingController.dart';
+import 'package:hotel_grand_capitol/Screen/BookedDetails.dart';
 import 'package:hotel_grand_capitol/Widgets/NeuButtons.dart';
+import 'package:hotel_grand_capitol/Widgets/TableView.dart';
 import 'package:hotel_grand_capitol/Widgets/TextFieldWidget.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:uuid/uuid.dart';
 
 enum Type { OYO, WalkIn }
 enum Payment { Paytm, Cash, BTC, WebPortal, Due}
+
 
 
 class BookingForm extends StatefulWidget {
@@ -18,8 +24,28 @@ class BookingForm extends StatefulWidget {
 class _BookingFormState extends State<BookingForm> {
   Type _type = Type.OYO;
   Payment _payment = Payment.Paytm;
+  BookingController bookingController = Get.put(BookingController());
+  TextEditingController regController = TextEditingController();
+  TextEditingController p1Controller = TextEditingController();
+  TextEditingController p2Controller = TextEditingController();
+  TextEditingController p3Controller = TextEditingController();
+  TextEditingController numberOfPeopleController = TextEditingController();
+  TextEditingController phoneNoController = TextEditingController();
+  TextEditingController bookingID = TextEditingController();
+  TextEditingController amountController = TextEditingController();
+  TextEditingController roomNoController = TextEditingController();
+  List<String> selectedRooms = [];
 
   String selectedType = "OYO";
+  String regID;
+
+@override
+  void initState() {
+  regID = bookingController.getUid(regID);
+  print("This is regID : $regID");
+  super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,30 +72,36 @@ class _BookingFormState extends State<BookingForm> {
                   10.height,
                   TextFieldWidget(
                     hintText: "Enter Registration Number",
+                    controller: regController,
                   ),
                   25.height,
                   Text("Number of Person", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
                   10.height,
                   TextFieldWidget(
                     hintText: "Person 1",
+                    controller: p1Controller,
                   ),
                   10.height,
                   TextFieldWidget(
                     hintText: "Person 2",
+                    controller: p2Controller,
                   ),10.height,
                   TextFieldWidget(
                     hintText: "Person 3",
+                    controller: p3Controller,
                   ),
                   10.height,
                   Text("Number of People", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
                   10.height,
                   TextFieldWidget(
                     hintText: "Enter number of people",
+                    controller: numberOfPeopleController,
                   ),
                   Text("Mobile Number", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
                   10.height,
                   TextFieldWidget(
                     hintText: "Enter your mobile number",
+                    controller: phoneNoController,
                   ),
                   10.height,
                   Text("Type", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
@@ -98,6 +130,7 @@ class _BookingFormState extends State<BookingForm> {
                   10.height,
                   TextFieldWidget(
                     hintText: "Enter your booking id",
+                    controller: bookingID,
                   ),
                   10.height,
                   Text("Payment Mode", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
@@ -156,18 +189,27 @@ class _BookingFormState extends State<BookingForm> {
                   10.height,
                   TextFieldWidget(
                     hintText: "Enter amount",
+                    controller: amountController,
                   ),
                   Text("Room Number", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
                   10.height,
-                  TextFieldWidget(
-                    hintText: "Enter room number",
-                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.4,
+                      width: MediaQuery.of(context).size.width,
+                      child: TableView()),
+                  // TextFieldWidget(
+                  //   hintText: "Enter room number",
+                  //   controller: roomNoController,
+                  // ),
                   20.height,
                   Align(
                     alignment: Alignment.center,
                     child: NeuButtons(
                       title: "Save",
-                      onTap: () {},
+                      onTap: () {
+                        bookingController.addDetails(regController.text, [p1Controller.text, p2Controller.text ?? "", p3Controller.text ?? ""], numberOfPeopleController.text, phoneNoController.text, _type.toString(), bookingID.toString(), _payment.toString(), amountController.text, selectedRooms);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => BookedDetails()));
+                      },
                       color: darkBluishColor,
                     ),
                   )

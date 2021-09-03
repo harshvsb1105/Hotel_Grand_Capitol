@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_grand_capitol/Constants.dart';
 import 'package:hotel_grand_capitol/Screen/BookingForm.dart';
+import 'package:hotel_grand_capitol/Screen/RoomBookingScreen.dart';
 import 'package:hotel_grand_capitol/Widgets/DashboardCards.dart';
 import 'package:hotel_grand_capitol/Widgets/NeuButtons.dart';
 import 'package:intl/intl.dart';
@@ -134,7 +135,9 @@ class DashboardScreen extends StatelessWidget {
                         child: NeuButtons(
                           title: "Rooms View",
                           color: bluishColor,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => RoomBookingScreen()));
+                          },
                         ),
                       ),
                     ),
