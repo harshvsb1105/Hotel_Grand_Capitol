@@ -196,7 +196,8 @@ class _BookingFormState extends State<BookingForm> {
                   Container(
                     height: MediaQuery.of(context).size.height * 0.4,
                       width: MediaQuery.of(context).size.width,
-                      child: TableView()),
+                      child: TableView()
+                  ),
                   // TextFieldWidget(
                   //   hintText: "Enter room number",
                   //   controller: roomNoController,
@@ -207,7 +208,7 @@ class _BookingFormState extends State<BookingForm> {
                     child: NeuButtons(
                       title: "Save",
                       onTap: () {
-                        bookingController.addDetails(regController.text, [p1Controller.text, p2Controller.text ?? "", p3Controller.text ?? ""], numberOfPeopleController.text, phoneNoController.text, _type.toString(), bookingID.toString(), _payment.toString(), amountController.text, selectedRooms);
+                        bookingController.addDetails(regController.text, [p1Controller.text, p2Controller.text ?? "", p3Controller.text ?? ""], numberOfPeopleController.text, phoneNoController.text, _type.toString(), bookingID.toString(), _payment.toString(), amountController.text, roomNoController.text);
                         Navigator.push(context, MaterialPageRoute(builder: (context) => BookedDetails()));
                       },
                       color: darkBluishColor,

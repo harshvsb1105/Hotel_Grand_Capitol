@@ -25,7 +25,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..bookingID = fields[5] as String
       ..paymentMode = fields[6] as String
       ..amount = fields[7] as String
-      ..roomNo = (fields[8] as List)?.cast<String>();
+      ..roomNo = fields[8] as String;
   }
 
   @override

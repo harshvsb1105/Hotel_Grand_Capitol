@@ -13,7 +13,7 @@ class BookingController extends GetxController {
       String bookingId,
       String paymentMode,
       String amount,
-      List<String> roomNo,
+      String roomNo,
       ) async {
     final bookRoom = UserModel()
         ..registrationNumber = regNo
@@ -34,4 +34,5 @@ class BookingController extends GetxController {
     regID = uuid.v4();
     return regID;
   }
+
 }

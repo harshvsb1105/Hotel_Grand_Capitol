@@ -31,7 +31,7 @@ dependencies:
   intl: ^0.17.0
   flutter_neumorphic: ^3.1.0
   nb_utils: ^4.4.7+1
-  get: ^4.3.8
+  get: any
   path_provider: ^2.0.2
   hive: ^2.0.4
   hive_flutter: ^1.1.0

@@ -29,5 +29,5 @@ class UserModel extends HiveObject{
   String amount;
 
   @HiveField(8)
-  List<String> roomNo;
+  String roomNo;
 }
