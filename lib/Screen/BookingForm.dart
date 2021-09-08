@@ -3,9 +3,11 @@ import 'package:get/get.dart';
 import 'package:hotel_grand_capitol/Constants.dart';
 import 'package:hotel_grand_capitol/Controllers/BookingController.dart';
 import 'package:hotel_grand_capitol/Screen/BookedDetails.dart';
+import 'package:hotel_grand_capitol/Screen/RoomBookingScreen.dart';
 import 'package:hotel_grand_capitol/Widgets/NeuButtons.dart';
 import 'package:hotel_grand_capitol/Widgets/TableView.dart';
 import 'package:hotel_grand_capitol/Widgets/TextFieldWidget.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:uuid/uuid.dart';
 
@@ -22,9 +24,8 @@ class BookingForm extends StatefulWidget {
 }
 
 class _BookingFormState extends State<BookingForm> {
-  Type _type = Type.OYO;
-  Payment _payment = Payment.Paytm;
-  BookingController bookingController = Get.put(BookingController());
+  Type type = Type.OYO;
+  Payment payment = Payment.Paytm;
   TextEditingController regController = TextEditingController();
   TextEditingController p1Controller = TextEditingController();
   TextEditingController p2Controller = TextEditingController();
@@ -34,15 +35,33 @@ class _BookingFormState extends State<BookingForm> {
   TextEditingController bookingID = TextEditingController();
   TextEditingController amountController = TextEditingController();
   TextEditingController roomNoController = TextEditingController();
+  TextEditingController guestImageController = TextEditingController();
+  TextEditingController guestIdController = TextEditingController();
   List<String> selectedRooms = [];
-
   String selectedType = "OYO";
   String regID;
 
-@override
+  pickImageGallery() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile image = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      guestImageController.text = image.path;
+    });
+  }
+
+  pickImageCamera() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile photo = await _picker.pickImage(source: ImageSource.camera);
+    setState(() {
+      guestImageController.text = photo.path;
+    });
+  }
+
+
+  @override
   void initState() {
-  regID = bookingController.getUid(regID);
-  print("This is regID : $regID");
+  // regID = bookingController.getUid(regID);
+  // print("This is regID : $regID");
   super.initState();
   }
 
@@ -90,126 +109,190 @@ class _BookingFormState extends State<BookingForm> {
                     hintText: "Person 3",
                     controller: p3Controller,
                   ),
-                  10.height,
+                  20.height,
                   Text("Number of People", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
                   10.height,
                   TextFieldWidget(
                     hintText: "Enter number of people",
                     controller: numberOfPeopleController,
                   ),
+                  20.height,
                   Text("Mobile Number", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
                   10.height,
                   TextFieldWidget(
                     hintText: "Enter your mobile number",
                     controller: phoneNoController,
                   ),
-                  10.height,
+                  20.height,
                   Text("Type", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
                   10.height,
                   RadioListTile<Type>(
                     title: const Text('OYO'),
                     value: Type.OYO,
-                    groupValue: _type,
+                    groupValue: type,
                     onChanged: (Type value) {
                       setState(() {
-                        _type = value;
+                        type = value;
                       });
                     },
                   ),
                   RadioListTile<Type>(
                     title: const Text('WalkIn'),
                     value: Type.WalkIn,
-                    groupValue: _type,
+                    groupValue: type,
                     onChanged: (Type value) {
                       setState(() {
-                        _type = value;
+                        type = value;
                       });
                     },
                   ),
+                  20.height,
                   Text("Booking ID(If OYO/Portal)", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
                   10.height,
                   TextFieldWidget(
                     hintText: "Enter your booking id",
                     controller: bookingID,
                   ),
-                  10.height,
+                  20.height,
                   Text("Payment Mode", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
                   10.height,
                   RadioListTile<Payment>(
                     title: const Text('Paytm'),
                     value: Payment.Paytm,
-                    groupValue: _payment,
+                    groupValue: payment,
                     onChanged: (Payment value) {
                       setState(() {
-                        _payment = value;
+                        payment = value;
                       });
                     },
                   ),
                   RadioListTile<Payment>(
                     title: const Text('Cash'),
                     value: Payment.Cash,
-                    groupValue: _payment,
+                    groupValue: payment,
                     onChanged: (Payment value) {
                       setState(() {
-                        _payment = value;
+                        payment = value;
                       });
                     },
                   ),
                   RadioListTile<Payment>(
                     title: const Text('BTC '),
                     value: Payment.BTC,
-                    groupValue: _payment,
+                    groupValue: payment,
                     onChanged: (Payment value) {
                       setState(() {
-                        _payment = value;
+                        payment = value;
                       });
                     },
                   ),
                   RadioListTile<Payment>(
                     title: const Text('Web Portal'),
                     value: Payment.WebPortal,
-                    groupValue: _payment,
+                    groupValue: payment,
                     onChanged: (Payment value) {
                       setState(() {
-                        _payment = value;
+                        payment = value;
                       });
                     },
                   ),
                   RadioListTile<Payment>(
                     title: const Text('Due'),
                     value: Payment.Due,
-                    groupValue: _payment,
+                    groupValue: payment,
                     onChanged: (Payment value) {
                       setState(() {
-                        _payment = value;
+                        payment = value;
                       });
                     },
                   ),
+                  20.height,
                   Text("Amount", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
                   10.height,
                   TextFieldWidget(
                     hintText: "Enter amount",
                     controller: amountController,
                   ),
-                  Text("Room Number", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
-                  10.height,
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.4,
-                      width: MediaQuery.of(context).size.width,
-                      child: TableView()
-                  ),
+                  // 20.height,
+                  // Text("Room Number", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
+                  // 10.height,
+                  // Container(
+                  //   height: MediaQuery.of(context).size.height * 0.4,
+                  //     width: MediaQuery.of(context).size.width,
+                  //     child: TableView()
+                  // ),
                   // TextFieldWidget(
                   //   hintText: "Enter room number",
                   //   controller: roomNoController,
                   // ),
                   20.height,
+                  Text("Guest Image", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
+                  10.height,
+                  TextFieldWidget(
+                    hintText: "Upload the Image",
+                    controller: guestImageController,
+                   suffixButton: true,
+                    suffixOnTap: () {
+                      showDialog(context: context, builder: (context) => Column(
+                        children: [
+                          NeuButtons(
+                            title: "Camera",
+                            onTap: () {
+                              pickImageCamera();
+                            },
+                          ),
+                          NeuButtons(
+                            title: "Gallery",
+                            onTap: () {
+                              pickImageGallery();
+                            },
+                          )
+                        ],
+                      ));
+                      // print("This is uploaded Image : ${guestImageController.text}");
+                    },
+                  ),
+                  20.height,
+                  Text("Guest ID Image", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
+                  10.height,
+                  TextFieldWidget(
+                    hintText: "Upload the Image",
+                    controller: guestIdController,
+                    suffixButton: true,
+                    suffixOnTap: () {
+                      showDialog(context: context, builder: (context) => Column(
+                        children: [
+                          NeuButtons(
+                            title: "Camera",
+                            onTap: () {
+                              pickImageCamera();
+                            },
+                          ),
+                          NeuButtons(
+                            title: "Gallery",
+                            onTap: () {
+                              pickImageGallery();
+                            },
+                          )
+                        ],
+                      ));                    },
+                  ),
+                  30.height,
                   Align(
                     alignment: Alignment.center,
                     child: NeuButtons(
                       title: "Save",
                       onTap: () {
-                        bookingController.addDetails(regController.text, [p1Controller.text, p2Controller.text ?? "", p3Controller.text ?? ""], numberOfPeopleController.text, phoneNoController.text, _type.toString(), bookingID.toString(), _payment.toString(), amountController.text, roomNoController.text);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => BookedDetails()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => RoomBookingScreen(
+                          regNo: regController.text,
+                          userName: [p1Controller.text, p2Controller.text ?? "", p3Controller.text ?? ""],
+                          noOfPeople: numberOfPeopleController.text,
+                          phoneNo: phoneNoController.text,
+                          type: type.toString(),
+                          bookingId: bookingID.toString(),
+                          paymentMode: payment.toString(),
+                          amount: amountController.text,
+                        )));
                       },
                       color: darkBluishColor,
                     ),

@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:hotel_grand_capitol/Model/BookedRoomModel.dart';
 
 part 'UserModel.g.dart';
 
@@ -29,5 +30,11 @@ class UserModel extends HiveObject{
   String amount;
 
   @HiveField(8)
-  String roomNo;
+  List<String> roomNo;
+
+  @HiveField(9)
+  String guestImage;
+
+  @HiveField(10)
+  String guestsId;
 }

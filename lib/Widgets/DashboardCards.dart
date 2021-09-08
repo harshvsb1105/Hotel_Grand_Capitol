@@ -14,7 +14,7 @@ class DashboardCards extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.all(Radius.circular(20))
+        // borderRadius: BorderRadius.all(Radius.circular(20))
       ),
     );
   }

@@ -12,7 +12,8 @@ Future main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
-  final box = await Hive.openBox<UserModel>('userModel');
+  Hive.registerAdapter(BookedRoomModelAdapter());
+  await Hive.openBox<UserModel>('userModBoxes');
   await Hive.openBox<BookedRoomModel>('bookedRoomModel');
   runApp(MyApp());
 }

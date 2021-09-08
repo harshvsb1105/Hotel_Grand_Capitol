@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hotel_grand_capitol/Model/BookedRoomModel.dart';
 import 'package:hotel_grand_capitol/Model/UserModel.dart';
 
 class BookedDetails extends StatefulWidget {
@@ -11,13 +12,16 @@ class BookedDetails extends StatefulWidget {
 
 class _BookedDetailsState extends State<BookedDetails> {
   List<UserModel> _usersList = [];
+  BookedRoomModel bookedRoomModel;
   // List get inventoryList => _inventoryList;
 
   getItem() async {
-    final box = await Hive.openBox<UserModel>('userModel');
+    final box = await Hive.openBox<UserModel>('userModBoxes');
     _usersList = box.values.toList();
     setState(() {});
     print("${_usersList.first.names.toString()}");
+    // print("RRRRRRRR${_usersList.first.roomNo}");
+    // print("ZZZZZZZZZ${bookedRoomModel.names} && ${bookedRoomModel.roomNo}");
   }
 
   @override
@@ -30,7 +34,12 @@ class _BookedDetailsState extends State<BookedDetails> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      body: ListView.builder(itemBuilder: (context, index) => Text(_usersList[index].names.toString())),
+      body: ListView.builder(
+        itemCount: _usersList.length,
+          itemBuilder: (context, index) => ListTile(
+            title: Text(_usersList[index].names.toString()),
+            subtitle: Text(_usersList[index].roomNo.toString())
+          )),
     );
   }
 }

@@ -13,4 +13,7 @@ class BookedRoomModel extends HiveObject{
 
   @HiveField(2)
   String roomNo;
+
+  @HiveField(3)
+  String regNo;
 }
