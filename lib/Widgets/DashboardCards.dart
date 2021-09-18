@@ -8,7 +8,7 @@ class DashboardCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 250,
+      height: 190,
       width: 180,
       child: child,
       padding: const EdgeInsets.all(8),

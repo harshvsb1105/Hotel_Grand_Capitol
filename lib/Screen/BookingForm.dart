@@ -1,3 +1,6 @@
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_grand_capitol/Constants.dart';
@@ -37,24 +40,79 @@ class _BookingFormState extends State<BookingForm> {
   TextEditingController roomNoController = TextEditingController();
   TextEditingController guestImageController = TextEditingController();
   TextEditingController guestIdController = TextEditingController();
+  TextEditingController checkInController = TextEditingController();
+  TextEditingController checkOutController = TextEditingController();
+
   List<String> selectedRooms = [];
   String selectedType = "OYO";
   String regID;
+  DateTime checkedInDate = DateTime.now();
+  DateTime checkedOutDate = DateTime.now();
+  File images;
+
 
   pickImageGallery() async {
     final ImagePicker _picker = ImagePicker();
     final XFile image = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
-      guestImageController.text = image.path;
+        guestImageController.text = image.path;
+        images = File(image.path);
     });
+    Navigator.pop(context);
+  }
+
+  pickImageIDGallery() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile image = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+        guestIdController.text = image.path;
+    });
+    Navigator.pop(context);
   }
 
   pickImageCamera() async {
     final ImagePicker _picker = ImagePicker();
     final XFile photo = await _picker.pickImage(source: ImageSource.camera);
     setState(() {
-      guestImageController.text = photo.path;
-    });
+        guestImageController.text = photo.path;
+         });
+    Navigator.pop(context);
+  }
+
+  pickImageIDCamera() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile photo = await _picker.pickImage(source: ImageSource.camera);
+    setState(() {
+        guestIdController.text = photo.path;
+        });
+    Navigator.pop(context);
+  }
+
+
+  Future<void> _checkedInDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: checkedInDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != checkedInDate)
+      setState(() {
+        checkedInDate = picked;
+        checkInController.text = checkedInDate.toString().substring(0,10);
+      });
+  }
+
+  Future<void> _checkedOutDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: checkedOutDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != checkedOutDate)
+      setState(() {
+        checkedOutDate = picked;
+        checkOutController.text = checkedOutDate.toString().substring(0,10);
+      });
   }
 
 
@@ -122,6 +180,42 @@ class _BookingFormState extends State<BookingForm> {
                   TextFieldWidget(
                     hintText: "Enter your mobile number",
                     controller: phoneNoController,
+                  ),
+                  20.height,
+                  Text("Date", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
+                  10.height,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.43,
+                        child: TextFieldWidget(
+                          hintText: "Check-In",
+                          controller: checkInController,
+                          suffixButton: true,
+                          suffixTitle: "In",
+                          suffixHeight: 30,
+                          suffixWidth: 35,
+                          suffixOnTap: () async {
+                            await _checkedInDate(context);
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.43,
+                        child: TextFieldWidget(
+                          hintText: "Check-Out",
+                          controller: checkOutController,
+                          suffixButton: true,
+                          suffixHeight: 30,
+                          suffixWidth: 35,
+                          suffixTitle: "Out",
+                          suffixOnTap: () async {
+                           await _checkedOutDate(context);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   20.height,
                   Text("Type", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
@@ -232,8 +326,11 @@ class _BookingFormState extends State<BookingForm> {
                     hintText: "Upload the Image",
                     controller: guestImageController,
                    suffixButton: true,
+                    suffixHeight: 50,
+                    suffixWidth: 170,
                     suffixOnTap: () {
-                      showDialog(context: context, builder: (context) => Column(
+                      showModalBottomSheet(context: context, builder: (context) => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           NeuButtons(
                             title: "Camera",
@@ -241,6 +338,7 @@ class _BookingFormState extends State<BookingForm> {
                               pickImageCamera();
                             },
                           ),
+                          20.height,
                           NeuButtons(
                             title: "Gallery",
                             onTap: () {
@@ -249,8 +347,7 @@ class _BookingFormState extends State<BookingForm> {
                           )
                         ],
                       ));
-                      // print("This is uploaded Image : ${guestImageController.text}");
-                    },
+                      },
                   ),
                   20.height,
                   Text("Guest ID Image", style: TextStyle(fontSize: 15, color: bluishColor, fontWeight: FontWeight.bold),),
@@ -259,23 +356,29 @@ class _BookingFormState extends State<BookingForm> {
                     hintText: "Upload the Image",
                     controller: guestIdController,
                     suffixButton: true,
+                    suffixHeight: 50,
+                    suffixWidth: 170,
                     suffixOnTap: () {
-                      showDialog(context: context, builder: (context) => Column(
+                      showModalBottomSheet(context: context, builder: (context) => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           NeuButtons(
                             title: "Camera",
                             onTap: () {
-                              pickImageCamera();
+                              pickImageIDCamera();
                             },
                           ),
+                          20.height,
                           NeuButtons(
                             title: "Gallery",
                             onTap: () {
-                              pickImageGallery();
+                              pickImageIDGallery();
                             },
                           )
                         ],
-                      ));                    },
+                      ));
+
+                    }
                   ),
                   30.height,
                   Align(
@@ -289,9 +392,14 @@ class _BookingFormState extends State<BookingForm> {
                           noOfPeople: numberOfPeopleController.text,
                           phoneNo: phoneNoController.text,
                           type: type.toString(),
-                          bookingId: bookingID.toString(),
+                          bookingId: bookingID.text,
                           paymentMode: payment.toString(),
                           amount: amountController.text,
+                          checkIn: checkInController.text,
+                          checkOut: checkOutController.text,
+                          guestImage: guestImageController.text,
+                          imageId: guestIdController.text,
+                          image: images
                         )));
                       },
                       color: darkBluishColor,

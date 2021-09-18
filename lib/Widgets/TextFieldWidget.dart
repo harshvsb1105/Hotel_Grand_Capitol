@@ -22,6 +22,8 @@ class TextFieldWidget extends StatelessWidget {
   final bool boxShape;
   final bool suffixButton;
   final Function suffixOnTap;
+  final double suffixHeight;
+  final double suffixWidth;
 
   const TextFieldWidget(
       {Key key,
@@ -32,7 +34,7 @@ class TextFieldWidget extends StatelessWidget {
       this.onChanged,
       this.suffix = false,
       this.suffixOnPressed,
-      this.suffixTitle,
+      this.suffixTitle = "Upload",
       this.minLines,
       this.maxLines,
       this.maxLength,
@@ -41,7 +43,7 @@ class TextFieldWidget extends StatelessWidget {
       this.boxShape = false,
       this.suffixWidget,
       this.suffixOnTap,
-      this.suffixButton = false})
+      this.suffixButton = false, this.suffixHeight, this.suffixWidth})
       : super(key: key);
 
   @override
@@ -83,8 +85,12 @@ class TextFieldWidget extends StatelessWidget {
                       hintStyle: TextStyle(color: Color(0xFF575F6B)))
                   .copyWith(
                       suffixIcon: NeuButtons(
-                  title: "Upload",
+                  title: suffixTitle,
+                  color: Color(0xFF575F6B),
+                  fontSize: 10,
                   onTap: suffixOnTap,
+                        height: suffixHeight,
+                        width: suffixWidth,
                 ).paddingAll(10).visible(true))
               : InputDecoration(
                   border: InputBorder.none,

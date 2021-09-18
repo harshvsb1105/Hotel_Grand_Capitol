@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:hotel_grand_capitol/Model/BookedRoomModel.dart';
 
 part 'UserModel.g.dart';
 
@@ -37,4 +36,10 @@ class UserModel extends HiveObject{
 
   @HiveField(10)
   String guestsId;
+
+  @HiveField(11)
+  String checkInDate;
+
+  @HiveField(12)
+  String checkOutDate;
 }

@@ -1,11 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_grand_capitol/Constants.dart';
 
 class NeuButtons extends StatelessWidget {
   final Function onTap;
   final String title;
   final Color color;
   final double fontSize;
-  const NeuButtons({Key key, this.onTap, this.title, this.color, this.fontSize = 18}) : super(key: key);
+  final Color buttonBackground;
+  final Color shadow1;
+  final Color shadow2;
+  final double height;
+  final double width;
+  const NeuButtons(
+      {Key key,
+      this.onTap,
+      this.title,
+      this.color,
+      this.fontSize = 18,
+      this.buttonBackground = const Color(0xffE8E8E8),
+      this.shadow1 = const Color(
+        0xffc5c5c5,
+      ),
+      this.shadow2 = const Color(0xffffffff),
+      this.height = 50,
+      this.width = 170})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,28 +32,19 @@ class NeuButtons extends StatelessWidget {
       onTap: onTap,
       child: Container(
         alignment: Alignment.center,
-        height: 50,
-        width: 170,
+        height: height,
+        width: width,
         decoration: BoxDecoration(
-          color: Color(0xffE8E8E8),
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(2, 2),
-              blurRadius: 6,
-              color: Color(0xffc5c5c5,)
-            ),
-            BoxShadow(
-                offset: Offset(-2, -2),
-                blurRadius: 6,
-                color: Color(0xffffffff)
-            )
-          ]
+            color: buttonBackground,
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            boxShadow: [
+              BoxShadow(offset: Offset(2, 2), blurRadius: 6, color: shadow1),
+              BoxShadow(offset: Offset(-2, -2), blurRadius: 6, color: shadow2)
+            ]),
+        child: Text(
+          title,
+          style: TextStyle(color: color, fontSize: fontSize),
         ),
-        child: Text(title, style: TextStyle(
-          color: color,
-          fontSize: fontSize
-        ),),
       ),
     );
   }
