@@ -5,7 +5,9 @@ import 'package:hotel_grand_capitol/Model/BookedRoomModel.dart';
 import 'package:hotel_grand_capitol/Model/UserModel.dart';
 import 'package:hotel_grand_capitol/Screen/BookedDetails.dart';
 import 'package:hotel_grand_capitol/Screen/BookingForm.dart';
+import 'package:hotel_grand_capitol/Screen/DueCustomersList.dart';
 import 'package:hotel_grand_capitol/Screen/RoomBookingScreen.dart';
+import 'package:hotel_grand_capitol/Screen/UsersListScreen.dart';
 import 'package:hotel_grand_capitol/Widgets/DashboardCards.dart';
 import 'package:hotel_grand_capitol/Widgets/NeuButtons.dart';
 import 'package:intl/intl.dart';
@@ -22,6 +24,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   List<BookedRoomModel> bookedRoomModel = [];
   List<UserModel> userModelList = [];
+  List<UserModel> dueUserModelList = [];
   List<String> checkInTypeOyo = [];
   List<String> checkInTypeWalkIn = [];
   List<int> amountListPaytm = [];
@@ -30,18 +33,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int sumPaytm;
   int sumBTC;
   int sumCash;
+  Box<UserModel> userModelBox;
+  Box<BookedRoomModel> bookedRoomModelBox;
 
 
   getDetails() async {
-    final userModelBox =  await Hive.openBox<UserModel>('betaUserBox');
-    final bookedRoomModelBox = await Hive.openBox<BookedRoomModel>('betaBookedRoomBox');
+    userModelBox =  await Hive.openBox<UserModel>('betaUserBox1');
+    bookedRoomModelBox = await Hive.openBox<BookedRoomModel>('betaBookedRoomBox1');
     setState(() {
       userModelList = userModelBox.values.toList();
       bookedRoomModel = bookedRoomModelBox.values.toList();
+      userModelList.map((e) {
+        if(e.pendingAmount == "0"){
+          setState(() {
+            dueUserModelList.add(e);
+          });
+        }
+      }).toList();
     });
     bookedRoomModel.map((e) {
-      print("----- ${e.type}");
-      if(e.type == "OYO"){
+      // print("----- ${e.type}");
+      if(e.type == "Type.OYO"){
         setState(() {
           checkInTypeOyo.add(e.type);
         });
@@ -50,27 +62,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
           checkInTypeWalkIn.add(e.type);
         });
       }
-      print("Length of types :: ${checkInTypeOyo.length} && ${checkInTypeWalkIn.length}");
+      // print("Length of types :: ${checkInTypeOyo.length} && ${checkInTypeWalkIn.length}");
     }).toList();
     userModelList.map((e) {
-      if(e.paymentMode == "Paytm"){
+      if(e.paymentMode == "Payment.Paytm"){
         int amount = int.parse(e.amount);
         amountListPaytm.add(amount);
         sumPaytm = amountListPaytm.sum;
         setState(() {});
-        print("Paytm pay : $sumPaytm");
-      } else if (e.paymentMode == "BTC") {
+      } else if (e.paymentMode == "Payment.BTC") {
         int amount = int.parse(e.amount);
         amountListBTC.add(amount);
         sumBTC = amountListBTC.sum;
         setState(() {});
-        print("BTC pay : $sumBTC");
-      } else {
+      } else if (e.paymentMode == "Payment.Cash") {
         int amount = int.parse(e.amount);
         amountListCash.add(amount);
         sumCash = amountListCash.sum;
         setState(() {});
-        print("Cash pay : $sumCash");
       }
     }).toList();
   }
@@ -172,32 +181,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Row(
-                                  children: [
-                                    // Text("ARR - ", style: TextStyle(color: backgroundColor, fontSize: 18),),
-                                    // SizedBox(width: 5,),
-                                    // Text("7", style: TextStyle(color: backgroundColor, fontSize: 18),),
-                                    SizedBox(width: 6,),
-                                    Text("WalkIn - ", style: TextStyle(color: backgroundColor, fontSize: 18),),
-                                    SizedBox(width: 5,),
-                                    Text(checkInTypeWalkIn.length.toString(), style: TextStyle(color: backgroundColor, fontSize: 18),),
-                                    SizedBox(width: 6,),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Row(
-                                  children: [
-                                    Text("OYO - ", style: TextStyle(color: backgroundColor, fontSize: 18),),
-                                    SizedBox(width: 3,),
-                                    Text(checkInTypeOyo.length.toString(), style: TextStyle(color: backgroundColor, fontSize: 18),),
-                                    SizedBox(width: 6,),
-                                    // Text("Web - ", style: TextStyle(color: backgroundColor, fontSize: 18),),
-                                    // SizedBox(width: 3,),
-                                    // Text("2", style: TextStyle(color: backgroundColor, fontSize: 18),),
-                                  ],
-                                )
+                                Text("OYO  ", style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                // SizedBox(width: 3,),
+                                Text(checkInTypeOyo.length.toString(), style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                SizedBox(height: 6,),
+                                Text("WalkIn ", style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                // SizedBox(width: 5,),
+                                Text(checkInTypeWalkIn.length.toString(), style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                // Row(
+                                //   children: [
+                                //     // Text("ARR - ", style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                //     // SizedBox(width: 5,),
+                                //     // Text("7", style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                //     SizedBox(width: 6,),
+                                //     Text("WalkIn - ", style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                //     SizedBox(width: 5,),
+                                //     Text(checkInTypeWalkIn.length.toString(), style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                //     SizedBox(width: 6,),
+                                //   ],
+                                // ),
+                                // SizedBox(
+                                //   height: 15,
+                                // ),
+                                // Row(
+                                //   children: [
+                                //     Text("OYO - ", style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                //     SizedBox(width: 3,),
+                                //     Text(checkInTypeOyo.length.toString(), style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                //     SizedBox(width: 6,),
+                                //     // Text("Web - ", style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                //     // SizedBox(width: 3,),
+                                //     // Text("2", style: TextStyle(color: backgroundColor, fontSize: 18),),
+                                //   ],
+                                // )
 
                               ],
                             ),
@@ -245,7 +261,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           title: "Rooms View",
                           color: bluishColor,
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => RoomBookingScreen(dashboard: true,)));
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => RoomBookingScreen(dashboard: true, usersList: userModelList,userModelBox: userModelBox, bookedRoomModelBox: bookedRoomModelBox,)));
                           },
                         ),
                       ),
@@ -255,11 +271,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: NeuButtons(
-                          title: "Expanses",
+                          title: "Customers List",
                           color: reddishColor,
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => BookedDetails()));
-
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => UsersListScreen(usersList: userModelList, bookedRoomModel: bookedRoomModel, userModelBox: userModelBox, bookedRoomModelBox: bookedRoomModelBox,)));
                           },
                         ),
                       ),
@@ -269,10 +284,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: NeuButtons(
-                          title: "Stay Extension",
+                          width: 200,
+                          title: "Customers with Due",
                           color: bluishColor,
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => BookedDetails()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DueCustomersList(usersList: dueUserModelList,)));
                           },
                         ),
                       ),
@@ -286,6 +302,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
+
   List<String> _dummyData = [
     '001',
     '002',

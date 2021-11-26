@@ -46,4 +46,10 @@ class BookedRoomModel extends HiveObject{
 
   @HiveField(13)
   List<String> roomsChosen;
+
+  @HiveField(14)
+  DateTime updatedAt;
+
+  @HiveField(15)
+  String pendingAmount;
 }

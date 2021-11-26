@@ -6,21 +6,21 @@ import 'package:uuid/uuid.dart';
 
 class BookingController extends GetxController {
   Future addDetails(
-    String regNo,
-    List<String> usersName,
-    String numberOfPeople,
-    String phoneNumber,
-    String type,
-    String bookingId,
-    String paymentMode,
-    String amount,
-    String checkIn,
-    String checkOut, {
-    List<String> roomNo,
-    String roomSelected,
-        String guestImage,
-        String guestImageId,
-  }) async {
+      String regNo,
+      List<String> usersName,
+      String numberOfPeople,
+      String phoneNumber,
+      String type,
+      String bookingId,
+      String paymentMode,
+      String amount,
+      String checkIn,
+      String checkOut,
+      {List<String> roomNo,
+      String roomSelected,
+      String guestImage,
+      String guestImageId,
+      String pendingAmount}) async {
     print("HHHHHHHHH 0");
 
     ///Make roomSelected List<String>
@@ -42,12 +42,14 @@ class BookingController extends GetxController {
       ..type = type
       ..bookingID = bookingId
       ..paymentMode = paymentMode
-      ..amount = amount
+      ..amount = paymentMode != "Payment.Due" ? amount : ""
       ..checkInDate = checkIn
       ..checkOutDate = checkOut
       ..roomNo = roomNo
-    ..guestsId = guestImageId
-    ..guestImage = guestImage;
+      ..guestsId = guestImageId
+      ..guestImage = guestImage
+      ..pendingAmount = paymentMode == "Payment.Due" ? amount : ""
+      ..updatedAt = DateTime.now();
     print("HHHHHHHHH 3 ---- > ${bookRoom.names} && ${bookRoom.roomNo}");
 
     final box = Boxes.getBooking();

@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/rendering.dart';
+import 'package:hotel_grand_capitol/Screen/DashboardScreen.dart';
+import 'package:hotel_grand_capitol/Widgets/NeuButtons.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/material.dart';
@@ -93,11 +95,16 @@ class _SlipScreenState extends State<SlipScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: backgroundColor,
-        floatingActionButton: FloatingActionButton(
-          child: Text("Print"),
-          onPressed: () {
-            _printScreen();
-          },
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: NeuButtons(
+            title: 'Print Slip',
+            onTap: ()  {
+              _printScreen();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+            },
+          ),
         ),
         body: RepaintBoundary(
           key: _printKey,

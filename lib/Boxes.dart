@@ -3,6 +3,6 @@ import 'package:hotel_grand_capitol/Model/BookedRoomModel.dart';
 import 'package:hotel_grand_capitol/Model/UserModel.dart';
 
 class Boxes {
-  static Box<UserModel> getBooking() => Hive.box<UserModel>("betaUserBox");
-  static Box<BookedRoomModel> roomBooked() => Hive.box<BookedRoomModel>("betaBookedRoomBox");
+  static Box<UserModel> getBooking() => Hive.box<UserModel>("betaUserBox1");
+  static Box<BookedRoomModel> roomBooked() => Hive.box<BookedRoomModel>("betaBookedRoomBox1");
 }

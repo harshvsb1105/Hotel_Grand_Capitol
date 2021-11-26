@@ -42,4 +42,10 @@ class UserModel extends HiveObject{
 
   @HiveField(12)
   String checkOutDate;
+
+  @HiveField(13)
+  DateTime updatedAt;
+
+  @HiveField(14)
+  String pendingAmount;
 }

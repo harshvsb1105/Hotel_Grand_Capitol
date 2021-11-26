@@ -29,13 +29,15 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..guestImage = fields[9] as String
       ..guestsId = fields[10] as String
       ..checkInDate = fields[11] as String
-      ..checkOutDate = fields[12] as String;
+      ..checkOutDate = fields[12] as String
+      ..updatedAt = fields[13] as DateTime
+      ..pendingAmount = fields[14] as String;
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(15)
       ..writeByte(0)
       ..write(obj.registrationNumber)
       ..writeByte(1)
@@ -61,7 +63,11 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(11)
       ..write(obj.checkInDate)
       ..writeByte(12)
-      ..write(obj.checkOutDate);
+      ..write(obj.checkOutDate)
+      ..writeByte(13)
+      ..write(obj.updatedAt)
+      ..writeByte(14)
+      ..write(obj.pendingAmount);
   }
 
   @override
