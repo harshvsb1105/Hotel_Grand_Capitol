@@ -134,13 +134,13 @@ class _SlipScreenState extends State<SlipScreen> {
                       children: [
                         Text("Registration Number - ${widget.regNo}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),),
                         13.height,
-                        Text("Guest Name", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),),
-                        10.height,
-                        Text("1. ${widget.userName.first}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
-                        5.height,
-                        Text("2. _____", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
-                        5.height,
-                        Text("3. _____", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
+                        Text("Guest Name - ${widget.userName.first}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),),
+                        // 10.height,
+                        // Text("${widget.userName.first}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
+                        // 5.height,
+                        // Text("2. _____", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
+                        // 5.height,
+                        // Text("3. _____", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
                       ],
                     ),
                     Container(
@@ -158,22 +158,28 @@ class _SlipScreenState extends State<SlipScreen> {
                 20.height,
                 Row(
                   children: [
-                    Row(
-                      children: [
-                        Text("Room Number -", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
-                        10.width,
-                        Column(
-                          children: roomWidget.map((e) =>  Container(
-                            height: 40,
-                            width: 100,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-                            child: e
-                          )).toList(),
-                        ),
-
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Text("Room Number -", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
+                    //     10.width,
+                    //     Column(
+                    //       children: roomWidget.map((e) =>  Container(
+                    //         height: 40,
+                    //         width: 100,
+                    //         alignment: Alignment.center,
+                    //         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+                    //         child: e
+                    //       )).toList(),
+                    //     ),
+                    //
+                    //   ],
+                    // ),
+                    Container(
+                        height: 40,
+                        width: 150,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+                        child: Text("Room Number - ${widget.roomNo.first}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),)),
                     Spacer(),
                     Container(
                       height: 60,

@@ -25,6 +25,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<BookedRoomModel> bookedRoomModel = [];
   List<UserModel> userModelList = [];
   List<UserModel> dueUserModelList = [];
+  List<BookedRoomModel> dueBookedRoomModel = [];
   List<String> checkInTypeOyo = [];
   List<String> checkInTypeWalkIn = [];
   List<int> amountListPaytm = [];
@@ -38,15 +39,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
   getDetails() async {
-    userModelBox =  await Hive.openBox<UserModel>('betaUserBox1');
-    bookedRoomModelBox = await Hive.openBox<BookedRoomModel>('betaBookedRoomBox1');
+    userModelBox =  await Hive.openBox<UserModel>('betaUserBox4');
+    bookedRoomModelBox = await Hive.openBox<BookedRoomModel>('betaBookedRoomBox4');
     setState(() {
       userModelList = userModelBox.values.toList();
       bookedRoomModel = bookedRoomModelBox.values.toList();
       userModelList.map((e) {
-        if(e.pendingAmount == "0"){
+        if(e.pendingAmount != ""){
           setState(() {
             dueUserModelList.add(e);
+          });
+        }
+      }).toList();
+      bookedRoomModel.map((e) {
+        if(e.pendingAmount != ""){
+          setState(() {
+            dueBookedRoomModel.add(e);
           });
         }
       }).toList();
@@ -66,16 +74,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }).toList();
     userModelList.map((e) {
       if(e.paymentMode == "Payment.Paytm"){
+        print("wwwwwwww 0---- ${e.amount}");
+
         int amount = int.parse(e.amount);
         amountListPaytm.add(amount);
         sumPaytm = amountListPaytm.sum;
         setState(() {});
       } else if (e.paymentMode == "Payment.BTC") {
+        print("wwwwwwww 1---- ${e.amount}");
         int amount = int.parse(e.amount);
         amountListBTC.add(amount);
         sumBTC = amountListBTC.sum;
         setState(() {});
       } else if (e.paymentMode == "Payment.Cash") {
+        print("wwwwwwww 3---- ${e.amount}");
         int amount = int.parse(e.amount);
         amountListCash.add(amount);
         sumCash = amountListCash.sum;
@@ -288,7 +300,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           title: "Customers with Due",
                           color: bluishColor,
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => DueCustomersList(usersList: dueUserModelList,)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DueCustomersList(usersList: dueUserModelList, bookedRoomModel: dueBookedRoomModel, userModelBox: userModelBox, bookedRoomModelBox: bookedRoomModelBox,)));
                           },
                         ),
                       ),

@@ -15,7 +15,12 @@ class UsersListScreen extends StatefulWidget {
   final Box<UserModel> userModelBox;
   final Box<BookedRoomModel> bookedRoomModelBox;
 
-  const UsersListScreen({Key key, this.usersList, this.bookedRoomModel, this.userModelBox, this.bookedRoomModelBox})
+  const UsersListScreen(
+      {Key key,
+      this.usersList,
+      this.bookedRoomModel,
+      this.userModelBox,
+      this.bookedRoomModelBox})
       : super(key: key);
 
   @override
@@ -23,9 +28,14 @@ class UsersListScreen extends StatefulWidget {
 }
 
 class _UsersListScreenState extends State<UsersListScreen> {
-  TextEditingController searchController = TextEditingController(text: "");
+  TextEditingController searchControllerPhone = TextEditingController(text: "");
+  TextEditingController searchControllerName = TextEditingController(text: "");
+  TextEditingController searchControllerRegistration =
+      TextEditingController(text: "");
   TextEditingController checkOutController = TextEditingController();
   String _searchText;
+  String _searchRegistration;
+  String _searchName;
   List<UserModel> filteredList = [];
   List<UserModel> allNewsList = [];
   DateTime checkedOutDate = DateTime.now();
@@ -44,6 +54,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
   }
 
   Widget _buildList() {
+    filteredList = widget.usersList;
     if (_searchText.isNotEmpty) {
       List<UserModel> tempList = [];
       for (int i = 0; i < filteredList.length; i++) {
@@ -74,56 +85,215 @@ class _UsersListScreenState extends State<UsersListScreen> {
               borderRadius: BorderRadius.circular(20.0),
             ),
             builder: (context) => Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 300,
-                width: 600,
-                alignment: Alignment.center,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context)
-                            .size
-                            .width *
-                            0.53,
-                        child: TextFieldWidget(
-                          hintText: "Check-Out",
-                          controller: checkOutController,
-                          suffixButton: true,
-                          suffixHeight: 30,
-                          suffixWidth: 35,
-                          suffixTitle: "Out",
-                          suffixOnTap: () async {
-                            await _checkedOutDate(
-                                context);
-                          },
-                        ),
-                      ),
-                      20.height,
-                      NeuButtons(
-                        color: bluishColor,
-                        title: "Modify Check-Out",
-                        buttonBackground: reddishColor,
-                        shadow1: Color(0xffcc4747),
-                        shadow2: Color(0xffff6161),
-                        onTap: () async {
-                          Hive.box('betaUserBox').putAt(
-                              index,
-                              UserModel().checkOutDate =
-                                  checkedOutDate
-                                      .toString());
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 300,
+                    width: 600,
+                    alignment: Alignment.center,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.53,
+                            child: TextFieldWidget(
+                              hintText: "Check-Out",
+                              controller: checkOutController,
+                              suffixButton: true,
+                              suffixHeight: 30,
+                              suffixWidth: 35,
+                              suffixTitle: "Out",
+                              suffixOnTap: () async {
+                                await _checkedOutDate(context);
+                              },
+                            ),
+                          ),
+                          20.height,
+                          NeuButtons(
+                            color: bluishColor,
+                            title: "Modify Check-Out",
+                            buttonBackground: reddishColor,
+                            shadow1: Color(0xffcc4747),
+                            shadow2: Color(0xffff6161),
+                            onTap: () async {
+                              Hive.box('betaUserBox4').putAt(
+                                  index,
+                                  UserModel().checkOutDate =
+                                      checkedOutDate.toString());
 
-                          /// Add for BookedRoomModel too
-                        },
-                      )
-                    ],
+                              /// Add for BookedRoomModel too
+                            },
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )));
+                )));
+      },
+    );
+  }
+
+  Widget _buildListRegistration() {
+    filteredList = widget.usersList;
+    print("SSSSSSSSSSS---${_searchRegistration}");
+    if (_searchRegistration.isNotEmpty) {
+      List<UserModel> tempList = [];
+      for (int i = 0; i < filteredList.length; i++) {
+        if (filteredList[i]
+            .registrationNumber
+            .toLowerCase()
+            .contains(_searchRegistration.toLowerCase())) {
+          print("LIST Searched :: ${filteredList[i].registrationNumber}");
+          tempList.add(filteredList[i]);
+        }
+      }
+      print("This is tempList :: ${tempList}");
+      filteredList = tempList;
+    }
+    print("filtered List :: ${filteredList}");
+    return ListView.builder(
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: filteredList.length,
+      itemBuilder: (BuildContext context, int index) {
+        return ListItemWidget(
+          userList: filteredList[index],
+        ).onTap(() => showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: reddishColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            builder: (context) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 300,
+                    width: 600,
+                    alignment: Alignment.center,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.53,
+                            child: TextFieldWidget(
+                              hintText: "Check-Out",
+                              controller: checkOutController,
+                              suffixButton: true,
+                              suffixHeight: 30,
+                              suffixWidth: 35,
+                              suffixTitle: "Out",
+                              suffixOnTap: () async {
+                                await _checkedOutDate(context);
+                              },
+                            ),
+                          ),
+                          20.height,
+                          NeuButtons(
+                            color: bluishColor,
+                            title: "Modify Check-Out",
+                            buttonBackground: reddishColor,
+                            shadow1: Color(0xffcc4747),
+                            shadow2: Color(0xffff6161),
+                            onTap: () async {
+                              Hive.box('betaUserBox4').putAt(
+                                  index,
+                                  UserModel().checkOutDate =
+                                      checkedOutDate.toString());
+
+                              /// Add for BookedRoomModel too
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )));
+      },
+    );
+  }
+
+  Widget _buildListName() {
+    filteredList = widget.usersList;
+    if (_searchName.isNotEmpty) {
+      List<UserModel> tempList = [];
+      for (int i = 0; i < filteredList.length; i++) {
+        if (filteredList[i]
+            .names
+            .first
+            .toLowerCase()
+            .contains(_searchName.toLowerCase())) {
+          print("LIST Searched :: ${filteredList[i].names}");
+          tempList.add(filteredList[i]);
+        }
+      }
+      print("This is tempList :: ${tempList}");
+      filteredList = tempList;
+    }
+    print("filtered List :: ${filteredList}");
+    return ListView.builder(
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: filteredList.length,
+      itemBuilder: (BuildContext context, int index) {
+        return ListItemWidget(
+          userList: filteredList[index],
+        ).onTap(() => showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: reddishColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            builder: (context) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 300,
+                    width: 600,
+                    alignment: Alignment.center,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.53,
+                            child: TextFieldWidget(
+                              hintText: "Check-Out",
+                              controller: checkOutController,
+                              suffixButton: true,
+                              suffixHeight: 30,
+                              suffixWidth: 35,
+                              suffixTitle: "Out",
+                              suffixOnTap: () async {
+                                await _checkedOutDate(context);
+                              },
+                            ),
+                          ),
+                          20.height,
+                          NeuButtons(
+                            color: bluishColor,
+                            title: "Modify Check-Out",
+                            buttonBackground: reddishColor,
+                            shadow1: Color(0xffcc4747),
+                            shadow2: Color(0xffff6161),
+                            onTap: () async {
+                              Hive.box('betaUserBox4').putAt(
+                                  index,
+                                  UserModel().checkOutDate =
+                                      checkedOutDate.toString());
+
+                              /// Add for BookedRoomModel too
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )));
       },
     );
   }
@@ -131,9 +301,10 @@ class _UsersListScreenState extends State<UsersListScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    filteredList = widget.usersList;
-    _searchText = searchController.text;
-
+    // filteredList = widget.usersList;
+    _searchText = searchControllerPhone.text;
+    _searchRegistration = searchControllerRegistration.text;
+    _searchName = searchControllerName.text;
     super.initState();
   }
 
@@ -156,145 +327,277 @@ class _UsersListScreenState extends State<UsersListScreen> {
               child: TextFieldWidget(
                 onChanged: (value) {
                   // searched = true;
-                  searchController.addListener(() {
+                  searchControllerPhone.addListener(() {
                     print(
                         "THis is length of followed NewsList : ${allNewsList.length}");
-                    if (searchController.text.isEmpty) {
+                    if (searchControllerPhone.text.isEmpty) {
                       _searchText = "";
                       filteredList = allNewsList;
                     } else {
-                      _searchText = searchController.text;
+                      _searchText = searchControllerPhone.text;
                     }
                     setState(() {});
                   });
                 },
                 hintText: "Search Phone Number",
                 prefixIcon: true,
-                controller: searchController,
+                controller: searchControllerPhone,
+              ),
+            ),
+            20.height,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: TextFieldWidget(
+                onChanged: (value) {
+                  // searched = true;
+                  searchControllerRegistration.addListener(() {
+                    print(
+                        "THis is length of followed NewsList : ${allNewsList.length}");
+                    if (searchControllerRegistration.text.isEmpty) {
+                      _searchRegistration = "";
+                      filteredList = allNewsList;
+                    } else {
+                      _searchRegistration = searchControllerRegistration.text;
+                    }
+                    setState(() {});
+                  });
+                },
+                hintText: "Search Registration Number",
+                prefixIcon: true,
+                controller: searchControllerRegistration,
+              ),
+            ),
+            20.height,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: TextFieldWidget(
+                onChanged: (value) {
+                  // searched = true;
+                  searchControllerName.addListener(() {
+                    print(
+                        "THis is length of followed NewsList : ${allNewsList.length}");
+                    if (searchControllerName.text.isEmpty) {
+                      _searchName = "";
+                      filteredList = allNewsList;
+                    } else {
+                      _searchName = searchControllerName.text;
+                    }
+                    setState(() {});
+                  });
+                },
+                hintText: "Search Name",
+                prefixIcon: true,
+                controller: searchControllerName,
               ),
             ),
             20.height,
             Expanded(
-              child: searchController.text.isEmpty
-                  ? ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.usersList.length,
-                  itemBuilder: (context, index) =>
-                       ListItemWidget(userList: widget.usersList[index])
-                          .onTap(() => showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: reddishColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              builder: (context) => Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      height: 300,
-                                      width: 600,
-                                      alignment: Alignment.center,
-                                      child: SingleChildScrollView(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.53,
-                                              child: TextFieldWidget(
-                                                hintText: "Check-Out",
-                                                controller: checkOutController,
-                                                suffixButton: true,
-                                                suffixHeight: 30,
-                                                suffixWidth: 35,
-                                                suffixTitle: "Out",
-                                                suffixOnTap: () async {
-                                                  await _checkedOutDate(
-                                                      context);
-                                                },
+              child: searchControllerPhone.text.isEmpty
+                  ? searchControllerRegistration.text.isEmpty
+                      ? searchControllerName.text.isEmpty
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: widget.usersList.length,
+                              itemBuilder: (context, index) => ListItemWidget(
+                                      userList: widget.usersList[index])
+                                  .onTap(() => showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      backgroundColor: reddishColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      ),
+                                      builder: (context) => Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Container(
+                                              height: 300,
+                                              width: 600,
+                                              alignment: Alignment.center,
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.53,
+                                                      child: TextFieldWidget(
+                                                        hintText: "Check-Out",
+                                                        controller:
+                                                            checkOutController,
+                                                        suffixButton: true,
+                                                        suffixHeight: 30,
+                                                        suffixWidth: 35,
+                                                        suffixTitle: "Out",
+                                                        suffixOnTap: () async {
+                                                          await _checkedOutDate(
+                                                              context);
+                                                        },
+                                                      ),
+                                                    ),
+                                                    20.height,
+                                                    NeuButtons(
+                                                      color: bluishColor,
+                                                      title: "Modify Check-Out",
+                                                      buttonBackground:
+                                                          reddishColor,
+                                                      shadow1:
+                                                          Color(0xffcc4747),
+                                                      shadow2:
+                                                          Color(0xffff6161),
+                                                      onTap: () async {
+                                                        print(
+                                                            "CHECKOUTDATE 0:: ${checkedOutDate}");
+                                                        UserModel userModel =
+                                                            UserModel()
+                                                              ..registrationNumber =
+                                                                  widget
+                                                                      .usersList[
+                                                                          index]
+                                                                      .registrationNumber
+                                                              ..names = widget
+                                                                  .usersList[
+                                                                      index]
+                                                                  .names
+                                                              ..phoneNo = widget
+                                                                  .usersList[
+                                                                      index]
+                                                                  .phoneNo
+                                                              ..type = widget
+                                                                  .usersList[
+                                                                      index]
+                                                                  .type
+                                                              ..bookingID = widget
+                                                                  .usersList[
+                                                                      index]
+                                                                  .bookingID
+                                                              ..paymentMode = widget
+                                                                  .usersList[
+                                                                      index]
+                                                                  .paymentMode
+                                                              ..amount = widget
+                                                                  .usersList[
+                                                                      index]
+                                                                  .amount
+                                                              ..checkInDate = widget
+                                                                  .usersList[
+                                                                      index]
+                                                                  .checkInDate
+                                                              ..checkOutDate =
+                                                                  checkedOutDate
+                                                                      .toString()
+                                                                      .substring(
+                                                                          0, 10)
+                                                              ..roomNo = widget
+                                                                  .usersList[
+                                                                      index]
+                                                                  .roomNo
+                                                              ..guestsId = widget
+                                                                  .usersList[
+                                                                      index]
+                                                                  .guestsId
+                                                              ..guestImage = widget
+                                                                  .usersList[index]
+                                                                  .guestImage
+                                                              ..pendingAmount = widget.usersList[index].pendingAmount
+                                                              ..updatedAt = DateTime.now();
+
+                                                        print(
+                                                            "CHECKOUTDATE 1 :: ${checkedOutDate}");
+
+                                                        widget.bookedRoomModel
+                                                            .map((e) {
+                                                          print(
+                                                              "REG VALUES :::::  ${widget.usersList[index].registrationNumber}--------${e.regNo} ---------");
+
+                                                          if (widget
+                                                                  .usersList[
+                                                                      index]
+                                                                  .registrationNumber ==
+                                                              e.regNo) {
+                                                            print(
+                                                                "REG VALUES ==== ${widget.usersList[index].registrationNumber}  *** ${e.regNo}");
+                                                            int idx = widget
+                                                                .bookedRoomModel
+                                                                .indexOf(e);
+
+                                                            BookedRoomModel
+                                                                room =
+                                                                BookedRoomModel()
+                                                                  ..roomNo =
+                                                                      e.roomNo
+                                                                  ..names =
+                                                                      e.names
+                                                                  ..regNo =
+                                                                      e.regNo
+                                                                  ..numberOfPeople = e
+                                                                      .numberOfPeople
+                                                                  ..checkOutDate = checkedOutDate
+                                                                      .toString()
+                                                                      .substring(
+                                                                          0, 10)
+                                                                  ..checkInDate = e
+                                                                      .checkInDate
+                                                                  ..bookingID = e
+                                                                      .bookingID
+                                                                  ..amount =
+                                                                      e.amount
+                                                                  ..paymentMode = e
+                                                                      .paymentMode
+                                                                  ..phoneNo =
+                                                                      e.phoneNo
+                                                                  ..type =
+                                                                      e.type
+                                                                  ..guestImage =
+                                                                      e.type
+                                                                  ..guestsId =
+                                                                      e.guestsId
+                                                                  ..pendingAmount = e
+                                                                      .pendingAmount
+                                                                  ..roomsChosen =
+                                                                      e.roomsChosen;
+
+                                                            widget
+                                                                .bookedRoomModelBox
+                                                                .putAt(
+                                                                    idx, room);
+                                                          }
+                                                        }).toList();
+
+                                                        print(
+                                                            "CHECKOUTDATE 2 :: ${checkedOutDate}");
+
+                                                        widget.userModelBox
+                                                            .putAt(index,
+                                                                userModel);
+                                                        print(
+                                                            "CHECKOUTDATE 3 :: ${checkedOutDate}");
+
+                                                        setState(() {});
+                                                        Navigator.pushReplacement(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (_) =>
+                                                                    DashboardScreen()));
+                                                        // await Hive.box('betaUserBox').putAt(index, userModel);
+
+                                                        /// Add for BookedRoomModel too
+                                                      },
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                            20.height,
-                                            NeuButtons(
-                                              color: bluishColor,
-                                              title: "Modify Check-Out",
-                                              buttonBackground: reddishColor,
-                                              shadow1: Color(0xffcc4747),
-                                              shadow2: Color(0xffff6161),
-                                              onTap: () async {
-                                                print("CHECKOUTDATE 0:: ${checkedOutDate}");
-                                                UserModel userModel = UserModel()
-                                                  ..registrationNumber = widget.usersList[index].registrationNumber
-                                                  ..names = widget.usersList[index].names
-                                                  ..phoneNo = widget.usersList[index].phoneNo
-                                                  ..type = widget.usersList[index].type
-                                                  ..bookingID = widget.usersList[index].bookingID
-                                                  ..paymentMode = widget.usersList[index].paymentMode
-                                                  ..amount = widget.usersList[index].amount
-                                                  ..checkInDate = widget.usersList[index].checkInDate
-                                                  ..checkOutDate = checkedOutDate.toString().substring(0,10)
-                                                  ..roomNo = widget.usersList[index].roomNo
-                                                  ..guestsId = widget.usersList[index].guestsId
-                                                  ..guestImage = widget.usersList[index].guestImage
-                                                  ..pendingAmount = widget.usersList[index].pendingAmount
-                                                  ..updatedAt = DateTime.now();
-
-                                                print("CHECKOUTDATE 1 :: ${checkedOutDate}");
-
-                                                widget.bookedRoomModel.map((e) {
-                                                  print("REG VALUES :::::  ${widget.usersList[index].registrationNumber}--------${e.regNo} ---------");
-
-                                                  if(widget.usersList[index].registrationNumber == e.regNo) {
-                                                    print("REG VALUES ==== ${widget.usersList[index].registrationNumber}  *** ${e.regNo}");
-                                                   int idx =  widget.bookedRoomModel.indexOf(e);
-
-                                                    BookedRoomModel room = BookedRoomModel()
-                                                      ..roomNo = e.roomNo
-                                                      ..names = e.names
-                                                      ..regNo = e.regNo
-                                                      ..numberOfPeople = e.numberOfPeople
-                                                      ..checkOutDate = checkedOutDate.toString().substring(0,10)
-                                                      ..checkInDate = e.checkInDate
-                                                      ..bookingID = e.bookingID
-                                                      ..amount = e.amount
-                                                      ..paymentMode = e.paymentMode
-                                                      ..phoneNo = e.phoneNo
-                                                      ..type = e.type
-                                                      ..guestImage = e.type
-                                                      ..guestsId = e.guestsId
-                                                      ..pendingAmount = e.pendingAmount
-                                                      ..roomsChosen = e.roomsChosen;
-
-                                                    widget.bookedRoomModelBox.putAt(idx, room);
-
-                                                  }
-                                                }).toList();
-
-                                                print("CHECKOUTDATE 2 :: ${checkedOutDate}");
-
-
-                                                widget.userModelBox.putAt(index, userModel);
-                                                print("CHECKOUTDATE 3 :: ${checkedOutDate}");
-
-
-                                                setState(() {
-
-                                                });
-                                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => DashboardScreen()));
-                                                // await Hive.box('betaUserBox').putAt(index, userModel);
-
-                                                /// Add for BookedRoomModel too
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )))
-                      ) : _buildList(),
+                                          ))))
+                          : _buildListName()
+                      : _buildListRegistration()
+                  : _buildList(),
             ),
           ],
         ),

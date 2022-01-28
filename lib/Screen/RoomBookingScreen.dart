@@ -81,7 +81,7 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
   }
 
   getBookedRooms() async {
-    final roomBox = await Hive.openBox<BookedRoomModel>('betaBookedRoomBox1');
+    final roomBox = await Hive.openBox<BookedRoomModel>('betaBookedRoomBox4');
     bookedRoom = roomBox.values.toList();
 
     bookedRoom.map((e) {
@@ -95,6 +95,11 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
   void initState() {
     getBookedRooms();
     super.initState();
+  }
+  @override
+  void dispose() {
+    addBillController.dispose();
+    super.dispose();
   }
 
   @override
@@ -148,7 +153,7 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
                           guestImage: widget.guestImage,
                           guestImageId: widget.imageId,
                         );
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SlipScreen(
@@ -166,7 +171,10 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
                                       imageId: widget.imageId,
                                       roomNo: roomsNoSelected.toList(),
                                       image: widget.imageFile,
-                                    )));
+                                    )),
+                              (Route<dynamic> route) => false,
+
+                        );
                       },
                       color: darkBluishColor,
                     ),
@@ -695,7 +703,12 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
                                                       shadow2: Color(0xffff6161),
                                                       onTap: () async {
                                                         print("ABOUT ROOM :: ${bookedRoom[index].roomNo}");
-                                                        print("Modify Bills 0 ${addBillController.text}");
+                                                        print("Modify Bills 0 ${addBillController.text} && ${bookedRoom[index].pendingAmount}");
+
+                                                        int sum = bookedRoom[index].pendingAmount != ""
+                                                            ? int.parse(addBillController.text) + int.parse(bookedRoom[index].pendingAmount)
+                                                            : int.parse(addBillController.text) + int.parse("0");
+                                                        String result = sum.toString();
 
                                                         BookedRoomModel room = BookedRoomModel()
                                                           ..roomNo = bookedRoom[index].roomNo
@@ -706,12 +719,12 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
                                                           ..checkInDate = bookedRoom[index].checkInDate
                                                           ..bookingID = bookedRoom[index].bookingID
                                                           ..amount = bookedRoom[index].amount
-                                                          ..paymentMode = addBillController.text
+                                                          ..paymentMode = bookedRoom[index].paymentMode
                                                           ..phoneNo = bookedRoom[index].phoneNo
                                                           ..type = bookedRoom[index].type
                                                           ..guestImage = bookedRoom[index].type
                                                           ..guestsId = bookedRoom[index].guestsId
-                                                          ..pendingAmount = bookedRoom[index].pendingAmount
+                                                          ..pendingAmount = result
                                                           ..roomsChosen = bookedRoom[index].roomsChosen;
 
                                                         print("Modify Bills 1 ${addBillController.text}");
@@ -768,7 +781,7 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
                                   shadow1: Color(0xffcc4747),
                                   shadow2: Color(0xffff6161),
                                   onTap: () async {
-                                    Navigator.push(
+                                    Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => SlipScreen(
@@ -795,7 +808,10 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
                                               roomNo: roomsNoSelected.toList(),
                                               image: File(
                                                   bookedRoom[index].guestImage),
-                                            )));
+                                            )),
+                                          (Route<dynamic> route) => false,
+
+                                    );
                                   },
                                 ),
                                 NeuButtons(

@@ -13,8 +13,8 @@ Future main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(BookedRoomModelAdapter());
-  await Hive.openBox<UserModel>('betaUserBox');
-  await Hive.openBox<BookedRoomModel>('betaBookedRoomBox');
+  await Hive.openBox<UserModel>('betaUserBox4');
+  await Hive.openBox<BookedRoomModel>('betaBookedRoomBox4');
   runApp(MyApp());
 }
 

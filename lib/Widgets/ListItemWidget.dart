@@ -17,16 +17,17 @@ final UserModel userList;
 class _ListItemWidgetState extends State<ListItemWidget> {
   File image;
 
-  createImage() {
+  File createImage() {
     image = File(widget.userList.guestImage);
     setState(() {
 
     });
+    return image;
   }
 
   @override
   void initState() {
-    createImage();
+    // createImage();
     super.initState();
   }
 
@@ -138,7 +139,7 @@ class _ListItemWidgetState extends State<ListItemWidget> {
                     bottomRight: Radius.circular(24),
                   ),
                   ),
-              child: Image.file(image, fit: BoxFit.cover,),
+              child: Image.file(createImage(), fit: BoxFit.cover,),
             ),
           ],
         ),

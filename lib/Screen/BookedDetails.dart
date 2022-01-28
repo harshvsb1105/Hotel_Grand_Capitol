@@ -20,8 +20,8 @@ class _BookedDetailsState extends State<BookedDetails> {
 
 
   getItem() async {
-    final box = await Hive.openBox<UserModel>('betaUserBox1');
-    final roomBox = await Hive.openBox<BookedRoomModel>('betaBookedRoomBox1');
+    final box = await Hive.openBox<UserModel>('betaUserBox4');
+    final roomBox = await Hive.openBox<BookedRoomModel>('betaBookedRoomBox4');
 
     _usersList = box.values.toList();
     bookedRoom = roomBox.values.toList();
